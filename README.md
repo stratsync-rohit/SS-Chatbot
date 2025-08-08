@@ -1,1 +1,1 @@
-# Chatbot
+Wellcome to StratSync
