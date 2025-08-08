@@ -23,7 +23,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
     >
       {!isUser && (
         <img
-          src="/src/assets/logo-bg.jpeg"
+          src="images/logo-bg.jpeg"
           alt="Stratsync Logo"
           className="h-10 w-auto"
         />

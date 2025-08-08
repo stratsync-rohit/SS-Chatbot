@@ -8,7 +8,7 @@ const Header: React.FC = () => {
           <div className="w-8 h-8 bg-gradient-to-br rounded-lg flex items-left justify-center"></div>
           <div>
             <img
-              src="/src/assets/header_logo.jpeg"
+              src="images/header_logo.jpeg"
               alt="Stratsync Logo"
               className="h-10 w-auto"
             />
