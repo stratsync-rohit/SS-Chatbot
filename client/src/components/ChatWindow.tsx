@@ -5,7 +5,7 @@ import Header from "./Header";
 import MessageBubble from "./MessageBubble";
 import InputBar from "./InputBar";
 import TypingIndicator from "./TypingIndicator";
-import logoBg from "../assets/logo-bg.png";
+
 
 
 interface Message {
