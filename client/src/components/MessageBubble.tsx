@@ -1,4 +1,6 @@
 import React from "react";
+import logoBg from "../assets/logo-bg.jpeg";
+
 
 interface Message {
   id: string;
@@ -22,7 +24,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
     >
       {!isUser && (
         <img
-          src="images/logo-bg.jpeg"
+          src={logoBg}
           alt="Stratsync Logo"
           className="h-10 w-auto"
         />
