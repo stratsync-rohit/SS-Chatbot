@@ -5,7 +5,7 @@ import Header from "./Header";
 import MessageBubble from "./MessageBubble";
 import InputBar from "./InputBar";
 import TypingIndicator from "./TypingIndicator";
-
+import logoBg from "../assets/logo-bg.png";
 
 
 interface Message {
@@ -104,7 +104,11 @@ const ChatWindow: React.FC = () => {
         <Header />
         <div className="flex-1 flex flex-col items-center justify-center px-4 py-8">
           <div className="text-center mb-12 max-w-3xl">
-           
+            <img
+              src="images/logo.jpeg"
+              alt="StratSync Logo"
+              className="h-16 w-auto mx-auto mb-4"
+            />
             <h1 className="text-4xl font-bold text-gray-900 mb-4">
               Welcome to StratSync
             </h1>

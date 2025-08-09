@@ -79,7 +79,7 @@ const InputBar: React.FC<InputBarProps> = ({ onSendMessage, isDisabled = false, 
                 text-white
                 ${!message.trim() || isDisabled
                   ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                  : 'bg-gradient-to-r from-blue-400  to-emerald-600 hover:opacity-90 shadow-md hover:shadow-lg'}
+                  : 'bg-gradient-to-r from-blue-400  to-emerald-400 hover:opacity-90 shadow-md hover:shadow-lg'}
               `}
             >
               {isDisabled ? (
