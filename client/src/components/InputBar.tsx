@@ -85,7 +85,7 @@ const InputBar: React.FC<InputBarProps> = ({
               type="submit"
               disabled={!message.trim() || isDisabled}
               className={`
-        absolute right-3 top-1/2 -translate-y-[55%]
+        absolute right-2.5 top-1/2 -translate-y-[55%]
         w-12 h-10 rounded-full flex items-center justify-center
         text-white transition duration-200
         ${
