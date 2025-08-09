@@ -12,10 +12,14 @@ This is the **frontend** for the StratSync Chatbot project.
 git clone https://github.com/stratsync-rohit/StratSync-Chatbot.git
 cd client
 
-Install dependencies
+```
 
+### 2. Install dependencies
+```bash
 npm install
+```
+### 3. Start the development server
 
-Start the development server
-
+```bash
 npm run dev
+```
