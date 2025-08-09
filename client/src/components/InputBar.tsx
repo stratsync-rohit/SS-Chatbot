@@ -1,12 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Loader2 } from 'lucide-react';
+import { Send, Loader2, MoveRight} from 'lucide-react';
+
 
 interface InputBarProps {
   onSendMessage: (message: string) => void;
   isDisabled?: boolean;
+  isCentered?: boolean;
 }
 
-const InputBar: React.FC<InputBarProps> = ({ onSendMessage, isDisabled = false }) => {
+const InputBar: React.FC<InputBarProps> = ({ onSendMessage, isDisabled = false, isCentered = false }) => {
   const [message, setMessage] = useState('');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -39,49 +41,55 @@ const InputBar: React.FC<InputBarProps> = ({ onSendMessage, isDisabled = false }
   };
 
   return (
-    <div className="border-t border-gray-200 bg-white px-4 py-4 sm:px-6">
+    <div className={`${isCentered 
+      ? 'bg-transparent px-4 py-4' 
+      : 'border-t border-gray-200 bg-white px-4 py-4 sm:px-6'
+    }`}>
       <div className="max-w-3xl mx-auto">
         <form onSubmit={handleSubmit} className="flex items-center gap-3">
-  
-  <textarea
-    ref={textareaRef}
-    value={message}
-    onChange={(e) => setMessage(e.target.value)}
-    onKeyDown={handleKeyDown}
-    placeholder="Type your message to StratSync..."
-    disabled={isDisabled}
-    rows={1}
-    className={`
-      flex-1 min-h-[48px] max-h-[120px]
-      resize-none rounded-xl px-4 py-3 text-sm sm:text-base
-      border-2 border-cyan-500 focus:outline-none
-      focus:ring-2 focus:ring-cyan-400
-      transition-all duration-200
-      text-gray-900 placeholder-gray-400
-      disabled:bg-gray-50 disabled:text-gray-400
-    `}
-  />
-
-
-  <button
-    type="submit"
-    disabled={!message.trim() || isDisabled}
-    className={`
-      px-5 py-3 rounded-xl font-semibold transition duration-200
-      text-white
-      ${!message.trim() || isDisabled
-        ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-        : 'bg-gradient-to-r from-blue-800 to-emerald-700 hover:opacity-90 shadow-md'}
-    `}
-  >
-    {isDisabled ? (
-      <Loader2 className="w-5 h-5 animate-spin" />
-    ) : (
-      <Send className="w-5 h-5" />
-    )}
-  </button>
-</form>
-
+          <div className="relative flex-1">
+            <textarea
+              ref={textareaRef}
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder={isCentered ? "Ask anything to get started..." : "Type your message to StratSync..."}
+              disabled={isDisabled}
+              rows={1}
+              className={`
+                w-full min-h-[56px] max-h-[120px]
+                resize-none px-6 py-4 text-sm sm:text-base
+                border-2 focus:outline-none
+                transition-all duration-300
+                text-gray-900 placeholder-gray-500
+                disabled:bg-gray-50 disabled:text-gray-400
+                ${isCentered 
+                  ? 'rounded-full border-gray-300 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-200 bg-gray-50 hover:bg-white shadow-lg' 
+                  : 'rounded-xl border-cyan-500 focus:ring-2 focus:ring-cyan-400'
+                }
+              `}
+            />
+            
+            <button
+              type="submit"
+              disabled={!message.trim() || isDisabled}
+              className={`
+                absolute right-2 top-1/2 transform -translate-y-1/2 mb-2
+                px-4 py-3 rounded-full font-semibold transition duration-200
+                text-white
+                ${!message.trim() || isDisabled
+                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  : 'bg-gradient-to-r from-blue-400  to-emerald-600 hover:opacity-90 shadow-md hover:shadow-lg'}
+              `}
+            >
+              {isDisabled ? (
+                <Loader2 className="w-5 h-5 animate-spin" />
+              ) : (
+                <MoveRight className="w-5 h-5" />
+              )}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

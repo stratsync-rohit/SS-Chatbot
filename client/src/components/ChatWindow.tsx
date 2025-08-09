@@ -1,31 +1,26 @@
-import React, { useState, useRef, useEffect } from 'react';
-import Header from './Header';
-import MessageBubble from './MessageBubble';
-import InputBar from './InputBar';
-import TypingIndicator from './TypingIndicator';
-import { sendMessage } from '../api';
+import React, { useState, useRef, useEffect } from "react";
+import Header from "./Header";
+import MessageBubble from "./MessageBubble";
+import InputBar from "./InputBar";
+import TypingIndicator from "./TypingIndicator";
+import { sendMessage } from "../api";
 
 interface Message {
   id: string;
   content: string;
-  sender: 'user' | 'assistant';
+  sender: "user" | "assistant";
   timestamp: Date;
 }
 
 const ChatWindow: React.FC = () => {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      content: 'Hello! I\'m Stratsync, your AI assistant. How can I help you today?',
-      sender: 'assistant',
-      timestamp: new Date()
-    }
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  const isUserMessages = messages.some((msg) => msg.sender === "user");
+
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => {
@@ -35,57 +30,90 @@ const ChatWindow: React.FC = () => {
   const handleSendMessage = async (content: string) => {
     if (!content.trim()) return;
 
-    
     const userMessage: Message = {
       id: Date.now().toString(),
       content,
-      sender: 'user',
-      timestamp: new Date()
+      sender: "user",
+      timestamp: new Date(),
     };
 
-    setMessages(prev => [...prev, userMessage]);
+    setMessages((prev) => [...prev, userMessage]);
     setIsTyping(true);
 
     try {
-   
       const response = await sendMessage(content);
-      
-     
+
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: response.reply || response.message || response.content || 'Sorry, I received an empty response.',
-        sender: 'assistant',
-        timestamp: new Date()
+        content:
+          response.reply ||
+          response.message ||
+          response.content ||
+          "Sorry, I received an empty response.",
+        sender: "assistant",
+        timestamp: new Date(),
       };
 
-      setMessages(prev => [...prev, assistantMessage]);
+      setMessages((prev) => [...prev, assistantMessage]);
     } catch (error) {
-      console.error('Error sending message:', error);
+      console.error("Error sending message:", error);
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: 'Please try again.',
-        sender: 'assistant',
-        timestamp: new Date()
+        content: "Please try again.",
+        sender: "assistant",
+        timestamp: new Date(),
       };
-      setMessages(prev => [...prev, errorMessage]);
+      setMessages((prev) => [...prev, errorMessage]);
     } finally {
       setIsTyping(false);
     }
   };
 
+  if (!isUserMessages) {
+    return (
+      <div className="flex flex-col h-screen max-w-4xl mx-auto bg-white shadow-lg">
+        <Header />
+
+        <div className="flex-1 flex flex-col items-center justify-center px-4 py-8">
+          <div className="text-center mb-12 max-w-3xl">
+            <div className="mb-8">
+              <img
+                src="images/logo-bg.jpeg"
+                alt="StratSync Logo"
+                className="h-16 w-auto mx-auto mb-4"
+              />
+              <h1 className="text-4xl font-bold text-gray-900 mb-4">
+                Welcome to StratSync
+              </h1>
+              <p className="text-lg text-gray-600 leading-relaxed mb-8">
+                Your AI co-pilot for customer success and growth.
+                Ask me anything to get started!
+              </p>
+            </div>
+          </div>
+
+          <div className="w-full max-w-3xl">
+            <InputBar
+              onSendMessage={handleSendMessage}
+              isDisabled={isTyping}
+              isCentered={true}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col h-screen max-w-4xl mx-auto bg-white shadow-lg">
       <Header />
-      
+
       <div className="flex-1 overflow-y-auto px-4 py-6 space-y-6">
         <div className="max-w-3xl mx-auto space-y-6">
           {messages.map((message) => (
-            <MessageBubble
-              key={message.id}
-              message={message}
-            />
+            <MessageBubble key={message.id} message={message} />
           ))}
-          
+
           {isTyping && <TypingIndicator />}
           <div ref={messagesEndRef} />
         </div>
