@@ -20,18 +20,17 @@ export default function App() {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         const email = user.email?.trim().toLowerCase();
-        console.log("Firebase returned email:", email);
 
         if (email && email.endsWith("@stratsync.ai")) {
           setIsLoggedIn(true);
           setShowLogin(false);
           setShowUnauthorized(false);
         } else {
-          toast.error("Unauthorized email address");
+          toast.error("Unauthorized email address", { autoClose: 1000 });
           auth.signOut();
           setIsLoggedIn(false);
-          setShowLogin(false);
           setShowUnauthorized(true);
+          setShowLogin(true);
         }
       } else {
         setIsLoggedIn(false);
@@ -48,7 +47,6 @@ export default function App() {
       const result = await signInWithPopup(auth, provider);
 
       const email = result.user.email?.trim().toLowerCase();
-      console.log("Google sign-in returned email:", email);
 
       if (email && email.endsWith("@stratsync.ai")) {
         setIsLoggedIn(true);
@@ -59,8 +57,8 @@ export default function App() {
         toast.error("Unauthorized email address", { autoClose: 1000 });
         await auth.signOut();
         setIsLoggedIn(false);
-        setShowLogin(false);
         setShowUnauthorized(true);
+        setShowLogin(true);
       }
     } catch (err) {
       console.error(err);
@@ -72,23 +70,20 @@ export default function App() {
     <div className="relative w-full h-screen overflow-hidden">
       <ToastContainer />
 
-      
       <div
         className={`transition-all duration-300 ${
-          showLogin || showUnauthorized ? "blur-sm" : ""
+          showLogin || showUnauthorized ? "blur-sm pointer-events-none" : ""
         }`}
       >
         <ChatWindow />
       </div>
 
-      
       {(showLogin || showUnauthorized) && (
         <div className="absolute inset-0 bg-black bg-opacity-40 z-10"></div>
       )}
 
-      
       <AnimatePresence>
-        {showLogin && (
+        {showLogin && !isLoggedIn && (
           <motion.div
             className="absolute inset-0 flex items-center justify-center z-20 p-4"
             initial={{ opacity: 0, scale: 0.9 }}
@@ -100,8 +95,8 @@ export default function App() {
                 Welcome to StratSync
               </h2>
               <p className="text-gray-500 mb-8">
-                Sign in to continue to your AI co-pilot for customer success
-                and growth.
+                Sign in to continue to your AI co-pilot for customer success and
+                growth.
               </p>
               <button
                 onClick={handleGoogleLogin}
@@ -119,9 +114,8 @@ export default function App() {
         )}
       </AnimatePresence>
 
-      
       <AnimatePresence>
-        {showUnauthorized && (
+        {showUnauthorized && !isLoggedIn && (
           <motion.div
             className="absolute inset-0 flex items-center justify-center z-20 p-4"
             initial={{ opacity: 0, scale: 0.9 }}
@@ -151,6 +145,3 @@ export default function App() {
     </div>
   );
 }
-
-
-
