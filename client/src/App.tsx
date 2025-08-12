@@ -4,25 +4,12 @@ import ChatWindow from "./components/ChatWindow";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import { initializeApp } from "firebase/app";
+import { auth } from "./firebase";
 import {
-  getAuth,
   GoogleAuthProvider,
   signInWithPopup,
   onAuthStateChanged,
 } from "firebase/auth";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyDVyovmUsGl5u7ovIoJHSbq6TP-zWUCiKU",
-  authDomain: "instashare-b328c.firebaseapp.com",
-  projectId: "instashare-b328c",
-  storageBucket: "instashare-b328c.appspot.com",
-  messagingSenderId: "552445805110",
-  appId: "1:552445805110:web:833842421ea3ac1b8ece97",
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -41,6 +28,7 @@ export default function App() {
           setShowUnauthorized(false);
         } else {
           toast.error("Unauthorized email address");
+          auth.signOut();
           setIsLoggedIn(false);
           setShowLogin(false);
           setShowUnauthorized(true);
@@ -84,6 +72,7 @@ export default function App() {
     <div className="relative w-full h-screen overflow-hidden">
       <ToastContainer />
 
+      
       <div
         className={`transition-all duration-300 ${
           showLogin || showUnauthorized ? "blur-sm" : ""
@@ -92,10 +81,12 @@ export default function App() {
         <ChatWindow />
       </div>
 
+      
       {(showLogin || showUnauthorized) && (
         <div className="absolute inset-0 bg-black bg-opacity-40 z-10"></div>
       )}
 
+      
       <AnimatePresence>
         {showLogin && (
           <motion.div
@@ -104,32 +95,31 @@ export default function App() {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
           >
-            <div className="flex items-center justify-center min-h-1/2 ">
-              <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-sm text-center border border-gray-100">
-                <h2 className="text-2xl font-semibold text-gray-800 mb-6">
-                  Welcome to StratSync
-                </h2>
-                <p className="text-gray-500 mb-8">
-                  Sign in to continue to your AI co-pilot for customer success
-                  and growth.
-                </p>
-                <button
-                  onClick={handleGoogleLogin}
-                  className="flex items-center justify-center gap-3 w-full bg-white border border-gray-300 text-gray-700 p-3 rounded-lg hover:bg-gray-100 transition font-medium shadow-sm"
-                >
-                  <img
-                    src="https://www.svgrepo.com/show/475656/google-color.svg"
-                    alt="Google logo"
-                    className="w-5 h-5"
-                  />
-                  Login with Google
-                </button>
-              </div>
+            <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-sm text-center border border-gray-100">
+              <h2 className="text-2xl font-semibold text-gray-800 mb-6">
+                Welcome to StratSync
+              </h2>
+              <p className="text-gray-500 mb-8">
+                Sign in to continue to your AI co-pilot for customer success
+                and growth.
+              </p>
+              <button
+                onClick={handleGoogleLogin}
+                className="flex items-center justify-center gap-3 w-full bg-white border border-gray-300 text-gray-700 p-3 rounded-lg hover:bg-gray-100 transition font-medium shadow-sm"
+              >
+                <img
+                  src="https://www.svgrepo.com/show/475656/google-color.svg"
+                  alt="Google logo"
+                  className="w-5 h-5"
+                />
+                Login with Google
+              </button>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
+      
       <AnimatePresence>
         {showUnauthorized && (
           <motion.div
@@ -138,24 +128,22 @@ export default function App() {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
           >
-            <div className="flex items-center justify-center min-h-1/2">
-              <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-sm text-center border ">
-                <h2 className="text-2xl font-semibold text-red-600 mb-4">
-                  Unauthorized Access!
-                </h2>
-                <p className="text-gray-600 mb-6">
-                  Please contact the StratSync team for assistance.
-                </p>
-                <button
-                  onClick={() => {
-                    setShowUnauthorized(false);
-                    setShowLogin(true);
-                  }}
-                  className="w-full bg-red-500 text-white p-3 rounded-lg hover:bg-red-600 transition font-medium shadow-sm"
-                >
-                  Go Back to Login
-                </button>
-              </div>
+            <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-sm text-center border">
+              <h2 className="text-2xl font-semibold text-red-600 mb-4">
+                Unauthorized Access!
+              </h2>
+              <p className="text-gray-600 mb-6">
+                Please contact the StratSync team for assistance.
+              </p>
+              <button
+                onClick={() => {
+                  setShowUnauthorized(false);
+                  setShowLogin(true);
+                }}
+                className="w-full bg-red-500 text-white p-3 rounded-lg hover:bg-red-600 transition font-medium shadow-sm"
+              >
+                Go Back to Login
+              </button>
             </div>
           </motion.div>
         )}
@@ -163,4 +151,6 @@ export default function App() {
     </div>
   );
 }
+
+
 
