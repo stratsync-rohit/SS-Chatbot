@@ -32,15 +32,15 @@ export default function App() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        const email = user.email;
-        if (email.endsWith("@stratsync.ai")) {
+        const email = user.email?.trim().toLowerCase();
+        console.log("Firebase returned email:", email);
+
+        if (email && email.endsWith("@stratsync.ai")) {
           setIsLoggedIn(true);
           setShowLogin(false);
           setShowUnauthorized(false);
         } else {
-          console.error("Unauthorized email address");
-          
-
+          toast.error("Unauthorized email address");
           setIsLoggedIn(false);
           setShowLogin(false);
           setShowUnauthorized(true);
@@ -54,32 +54,31 @@ export default function App() {
     return () => unsubscribe();
   }, []);
 
-  
-
   const handleGoogleLogin = async () => {
-  try {
-    const provider = new GoogleAuthProvider();
-    const result = await signInWithPopup(auth, provider);
-    const email = result.user.email;
+    try {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
 
-    if (email.endsWith("@stratsync.ai")) {
-      setIsLoggedIn(true);
-      setShowLogin(false);
-      setShowUnauthorized(false);
-      toast.success("Google login successful!", { autoClose: 1000 });
-    } else {
-      toast.error("Unauthorized email address", { autoClose: 1000 });
-      await auth.signOut();
-      setIsLoggedIn(false);
-      setShowLogin(false);
-      setShowUnauthorized(true);
+      const email = result.user.email?.trim().toLowerCase();
+      console.log("Google sign-in returned email:", email);
+
+      if (email && email.endsWith("@stratsync.ai")) {
+        setIsLoggedIn(true);
+        setShowLogin(false);
+        setShowUnauthorized(false);
+        toast.success("Google login successful!", { autoClose: 1000 });
+      } else {
+        toast.error("Unauthorized email address", { autoClose: 1000 });
+        await auth.signOut();
+        setIsLoggedIn(false);
+        setShowLogin(false);
+        setShowUnauthorized(true);
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Google login failed!", { autoClose: 1000 });
     }
-  } catch (err) {
-    console.error(err);
-    toast.error("Google login failed!", { autoClose: 1000 });
-  }
-};
-
+  };
 
   return (
     <div className="relative w-full h-screen overflow-hidden">
@@ -105,8 +104,6 @@ export default function App() {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
           >
-            
-
             <div className="flex items-center justify-center min-h-1/2 ">
               <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-sm text-center border border-gray-100">
                 <h2 className="text-2xl font-semibold text-gray-800 mb-6">
@@ -141,8 +138,6 @@ export default function App() {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
           >
-          
-
             <div className="flex items-center justify-center min-h-1/2">
               <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-sm text-center border ">
                 <h2 className="text-2xl font-semibold text-red-600 mb-4">
@@ -168,3 +163,4 @@ export default function App() {
     </div>
   );
 }
+
