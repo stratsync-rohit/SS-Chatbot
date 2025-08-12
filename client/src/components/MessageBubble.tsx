@@ -1,6 +1,4 @@
 import React from "react";
-// import logoBg from "../assets/logo-bg.jpeg";
-
 
 interface Message {
   id: string;
